@@ -8,14 +8,6 @@ WHAT'S NEW IN v1.5.0
         plugged into it). Check its readings against a multimeter - see OilGauge370Z_README.md section 4.5.
     Boost and AFR now work on any of these boards. Your saved settings are kept when you update.
 
-WHAT'S NEW IN v1.4.0
-  * RUN DEMO: a button on the phone page (card "Demo") sends invented readings for oil, boost and AFR to every screen
-    so you can see all the gauges, alert colours and warning lights move without running the car. It stops by itself after
-    2 minutes or when you press Stop demo; a DEMO tag shows on the screen, the buzzer is silent, and a REAL low oil
-    pressure alarm ends the demo immediately. Nothing is saved.
-  * Designed screens: warning lights can be set in psi or bar ("Value in" in the editor; the layout file gets "units").
-  * Designed screens: needles are now always drawn on top of warning lights (they passed underneath before).
-
 WHAT'S NEW IN v1.3.5
   * Designed screens: each alert level (low red/amber, high amber/red) can have its own colour - its zone on the scale
     and the fill/reading while in it. E.g. a blue vacuum zone on a boost arc.
@@ -41,17 +33,6 @@ WHAT CAME IN v1.2.0
   * Boost and AFR sensor PRESETS (picker on the page) or a custom two-point curve.
   * Brightness is now a slider on the phone page (it used to be swipe left/right).
   * Zero boost button (engine off) to learn the day's atmospheric pressure.
-  * Upgrading from v1.1.0 keeps your saved calibration, thresholds and units.
-    Boost and AFR start switched off, with one Oil screen - nothing changes until
-    you turn them on.
-
-Waveshare ESP32-S3-Touch-LCD-2.1 (2.5D curved round panel)  +  one of:
-   * M5 Meter ISOLATED (ADS1115, I2C 0x49)       - same unit the Pi 4 / brain used
-   * Adafruit INA3221 (STEMMA QT, I2C 0x40-0x43)
-Reads the oil pressure sender directly and shows it on a dial. No brain, no Pi 4.
-With the INA3221 it can also read a boost sensor and a wideband AFR controller.
-Plug in either sensor board - the gauge finds it by itself. Settings are changed
-from your phone over the gauge's own Wi-Fi (swipe up on the dial).
 
 
 WIRING
@@ -246,23 +227,17 @@ pressure while it installs: only do this when parked. If an update fails the old
 firmware keeps running. Your saved settings and Wi-Fi details survive an update.
 
 Safety notes
-  * Anyone who can join the hotspot (they need the password, which is NOT shown on the dial) can
+  * Anyone who can join the hotspot (they need the password) can
     change settings and install firmware. There is no second login.
-  * Wi-Fi is OFF at power-up, always. While it is on, the display's memory bus is
-    shared with it; the 12 MHz pixel clock is what kept your screens stable with
-    Wi-Fi running, but I could not test that on the real panel. Turn it off before
-    driving if the picture misbehaves.
+  * Wi-Fi is OFF at power-up, always.
   * If the gauge refuses to switch Wi-Fi on and shows LOW MEMORY, internal RAM is
     short (needs about 45 KB free; the serial log prints the figure). Fix: in
     lv_conf.h set LV_MEM_SIZE to (64U * 1024U) for this gauge only - do not put
-    that file in the library used by your gauge screens - and rebuild.
+    that file in the library used by gauge screens - and rebuild.
 
 
-THE LOW-PRESSURE ALERT - DIFFERENT FROM THE BRAIN, ON PURPOSE
+THE LOW-PRESSURE ALERT
 -------------------------------------------------------------
-The brain only alarms when RPM >= 400 (so a parked car doesn't), and the Pi
-side scaled the threshold by RPM and oil temperature. This gauge has no RPM and
-no oil temperature, so it cannot do either. Instead:
   * It ARMS the first time pressure reaches 15 psi (the engine has run). Until
     then the dial stays green/neutral - key on, engine off does not alarm.
   * Once armed, below 10 psi for 1.5 s = CRITICAL: ring flashes red, LOW OIL
@@ -270,8 +245,7 @@ no oil temperature, so it cannot do either. Instead:
     red). Below 20 psi = amber.
   * Armed stays armed until power is removed.
   * Defaults are the flat 20 / 10 psi the ESP32 screens use (adjustable on the page) - hot idle at low
-    RPM is judged against the same line as hard driving. If you want the
-    RPM+temperature curve back, the gauge needs those two inputs (CAN).
+    RPM is judged against the same line as hard driving.
   The buzzer can be switched off on the page.
 
 
@@ -280,17 +254,15 @@ CHECK BEFORE YOU TRUST IT
   [ ] Calibration - set on the page (or as defaults in oil_config.h):
         M5 scale / offset      from ~/.m5_vmeter_cal.json on the Pi 4
         pressure scale / offset from ~/.oil_sender_cal.json on the Pi 4
-      Both are still 1.0 / 0.0 (uncalibrated) - I did not have your numbers.
-  [ ] Sender range (0.5-4.5 V, 10 bar) - copied from Brain370Z/config.h; confirm
-      it is the same sender.
+      Both are 1.0 / 0.0 (uncalibrated) 
+  [ ] Sender range (0.5-4.5 V, 10 bar).
   [ ] With a multimeter on the sender wire, compare against the page's live volts
       and use MATCH if they differ (the INA3221 especially).
   [ ] Pull the sensor lead: expect NO SENSOR / CHECK WIRING, never "0".
   [ ] Run the engine: it arms (serial prints "[oil] armed"), then check the
-      pressure against a mechanical gauge once, if you have one.
+      pressure against a mechanical gauge once.
   [ ] Swipe up, join the Wi-Fi, open the page, change something, power-cycle and
       check it stuck. Then try the 5-second hold and CANCEL.
-  [ ] Watch the picture with Wi-Fi on for a few minutes (judder check).
 
 
 FILES
@@ -312,41 +284,6 @@ board_panel.*       the ST7701 round panel (set-up commands, RGB output) and bac
 board_touch.*       the CST820 touch controller
 board_lvgl.*        connects LVGL to the panel and touch
 lv_conf.h           LVGL config for the library (see step 2)
-tools/              PC tests (see TESTED below)
+tools/              PC tests
 
 
-TESTED / NOT TESTED
--------------------
-Done (on a PC / in a build, not on your hardware):
-  * The sketch compiles for ESP32-S3 with esp32 core 3.0.7 and LVGL 8.3.10
-    (43% flash, 54% static RAM).
-  * tools/test_oil_math.cpp      volts->psi against the brain's formula; boost and
-                                 AFR against volt_publisher.py's formulas across the
-                                 whole voltage range; every preset; fault limits;
-                                 zero-boost acceptance; oil / boost / AFR alert levels
-                                 (including the "under load" gate).
-  * tools/test_oil_settings.cpp  every setting's limits, junk input refused, nothing
-                                 half-applied, channel clashes, screens that use a
-                                 gauge that is off, preset behaviour, and the upgrade
-                                 from v1.1.0 settings.
-  * tools/sim                    the real sensor code against simulated M5 and
-                                 INA3221 chips: detection, hot-plug, range switching,
-                                 wiring faults, and oil + boost + AFR on channels in
-                                 any order (one channel failing doesn't affect the others).
-  * tools/webtest                the real phone page in headless Chromium against the
-                                 gauge's real settings / live / zero code (compiled
-                                 for the PC): screens, presets, live preview, zero
-                                 boost, brightness slider, rejection messages, MATCH,
-                                 Wi-Fi, upload (python3 run_page_test.py; needs
-                                 playwright and g++).
-NOT done - needs the real board:
-  * Nothing has run on the display, touch panel or Wi-Fi radio. The dials (especially
-    the NEW split layout - I could not see it drawn), swipes, 5-second hold prompt and
-    the web server code on the gauge side are compiled only. Please look at every
-    screen and tell me about any overlap, clipping near the curved edge, or text that
-    does not fit. Also untested: Wi-Fi starting at runtime, free RAM (watch the
-    serial log), picture stability with Wi-Fi on, a real over-the-air update, the
-    buzzer, and LVGL heap use while swiping between screens.
-  * The boost / AFR wiring advice and the preset curves come from datasheets and
-    published specs; none of it has been checked against your sensors.
-  * The INA3221 wiring advice is from the datasheet/Adafruit guide, not bench-tested.
