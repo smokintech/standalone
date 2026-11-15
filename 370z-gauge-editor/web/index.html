@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layout Editor</title>
+<link rel="stylesheet" href="editor.css">
+<link rel="icon" href="icon.svg">
+</head>
+<body>
+<header id="top">
+  <div class="brand"><span class="dot"></span><span id="brandName">Oil Gauge</span> <b>Layout Editor</b> <small style="opacity:.5;font-weight:400">v1.4.2</small></div>
+  <select id="edSel" title="Which gauge these layouts are for. Switching opens the other version's own screens."><option value="gauge">Standalone oil gauge</option><option value="can">Full CAN-bus screens</option></select>
+  <div class="file"><span id="fileName">untitled.json</span><span id="dirty" title="Not saved"></span></div>
+  <div class="grp">
+    <button data-act="new">New</button>
+    <button data-act="open">Open…</button>
+    <button data-act="save" title="Ctrl+S">Save</button>
+    <button data-act="saveas">Save as…</button>
+  </div>
+  <div class="grp">
+    <button data-act="undo" title="Ctrl+Z" class="icon">↶</button>
+    <button data-act="redo" title="Ctrl+Y" class="icon">↷</button>
+  </div>
+  <div class="grp">
+    <button data-ed="gauge" data-act="gaugefile" class="primary" title="Check the layout the way the gauge will, then save the file to upload on the gauge's settings page">Download for gauge</button>
+    <button data-ed="can" data-act="export" class="primary" title="Write Gauge_Layouts.h into the screen sketch folder">Export to screen code</button>
+    <button data-act="more" class="icon" title="More">⋯</button>
+  </div>
+  <div class="grp right">
+    <button data-ed="can" data-act="settings" class="icon" title="Settings">⚙</button>
+  </div>
+  <div id="moreMenu" class="menu" hidden>
+    <button data-ed="can" data-act="loadsketch">Open what the screens have (from the sketch)</button>
+    <button data-act="import">Import a layout file from this computer…</button>
+    <button data-act="download">Download layout (.json)</button>
+    <button data-ed="can" data-act="downloadh">Download Gauge_Layouts.h</button>
+  </div>
+</header>
+
+<main>
+  <aside id="views">
+    <div class="phead"><h2>Views <span id="viewCount" class="muted"></span></h2>
+      <button data-act="addview" class="small primary">+ View</button></div>
+    <div id="builtinBanner"></div>
+    <ol id="viewList"></ol>
+    <div class="pfoot">
+      <button data-act="viewup" class="small icon" title="Move up">▲</button>
+      <button data-act="viewdown" class="small icon" title="Move down">▼</button>
+      <button data-act="viewdup" class="small">Duplicate</button>
+      <button data-act="viewdel" class="small danger">Delete</button>
+    </div>
+  </aside>
+
+  <section id="stage">
+    <div id="tools">
+      <div class="grp" id="addGauge">
+        <span class="lbl">Add</span>
+        <button data-add="arc">Arc</button>
+        <button data-add="needle">Needle</button>
+        <button data-add="bar">Bar</button>
+        <button data-add="digital">Number</button>
+        <button data-add="light">Light</button>
+        <button data-add="text">Text</button>
+        <button data-add="line">Line</button>
+        <button data-ed="can" data-add="clock">Clock</button>
+        <button data-ed="can" data-add="image">Image</button>
+      </div>
+      <div class="grp">
+        <label class="tog"><input type="checkbox" id="snap" checked> Snap</label>
+      </div>
+      <div class="grp" id="themeBar">
+        <span class="lbl">Preview as</span>
+        <span id="accents" data-ed="can"></span>
+        <select id="dialSel" data-ed="can"><option value="1">Black face</option><option value="0">White face</option></select>
+        <select id="tempSel" data-ed="can"><option value="0">°C</option><option value="1">°F</option></select>
+        <select id="oilSel" title="The gauge's units setting (Display & alerts on its settings page)"><option value="0">psi</option><option value="1">bar</option></select>
+        <select id="clockSel" data-ed="can" title="The screen's CLOCK setting - clocks left on “Screen setting” follow it"><option value="1">Analogue clock</option><option value="0">Digital clock</option></select>
+        <select id="screenSel" data-ed="can" title="Which screen to preview as (screen list and alert takeover)"><option value="1">Screen 1</option><option value="2">Screen 2</option><option value="3">Screen 3</option></select>
+      </div>
+    </div>
+
+    <div id="canvasArea">
+      <div id="screenBox">
+        <canvas id="screen" width="480" height="480"></canvas>
+        <svg id="overlay" viewBox="0 0 480 480"></svg>
+      </div>
+      <div id="emptyMsg" hidden>No views yet - press <b>+ View</b>.</div>
+    </div>
+
+    <div id="status"><span id="valid"></span><span id="alertNote"></span><button data-act="sweep" class="small right" title="Open the view again, like the screen does when you swipe to it">↻ Replay opening</button></div>
+
+    <div id="data">
+      <div class="tabs" id="dataTabs">
+        <button data-src="demo" class="on">Demo motion</button>
+        <button data-src="manual">Set values</button>
+        <button data-src="none">No data</button>
+        <button data-ed="can" data-src="live">Live from brain</button>
+        <button data-ed="can" data-src="replay">Replay recording</button>
+      </div>
+      <div id="dataBody"></div>
+    </div>
+  </section>
+
+  <aside id="props"></aside>
+</main>
+
+<div id="toast" hidden></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+<input type="file" id="csvIn" accept=".csv,text/csv" hidden>
+
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+
+<script type="module" src="editor.js"></script>
+</body>
+</html>

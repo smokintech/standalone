@@ -1,0 +1,327 @@
+{
+ "format": "370z-gauge-layout",
+ "version": 1,
+ "views": [
+  {
+   "id": "oil_needle",
+   "name": "Oil (needle)",
+   "gauges": [
+    {
+     "type": "needle",
+     "input": "oil_psi",
+     "min": 0,
+     "max": 120,
+     "start": 225,
+     "sweep": 270,
+     "width": 14,
+     "ticks": {
+      "major": 6,
+      "minor": 4
+     },
+     "number": {
+      "font": 48,
+      "dy": 95
+     },
+     "label": {
+      "text": "OIL",
+      "dy": 140
+     },
+     "unit": {
+      "dy": 58
+     },
+     "alerts": {
+      "low_crit": 10,
+      "low_warn": 20,
+      "when_running": true,
+      "flash": false,
+      "takeover": false
+     },
+     "anim": {
+      "smooth": 0.6,
+      "sweep": true,
+      "peak": true,
+      "peak_s": 3
+     }
+    }
+   ]
+  },
+  {
+   "id": "oil_arc",
+   "name": "Oil (arc)",
+   "gauges": [
+    {
+     "type": "arc",
+     "input": "oil_psi",
+     "min": 0,
+     "max": 120,
+     "start": 225,
+     "sweep": 270,
+     "segments": 20,
+     "ticks": {
+      "major": 6,
+      "minor": 2
+     },
+     "label": {
+      "text": "OIL"
+     },
+     "alerts": {
+      "low_crit": 10,
+      "low_warn": 20,
+      "when_running": true,
+      "flash": false,
+      "takeover": false
+     },
+     "anim": {
+      "smooth": 0.5,
+      "sweep": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "oil_lamps",
+   "name": "Oil (lamp arc)",
+   "gauges": [
+    {
+     "type": "arc",
+     "input": "oil_psi",
+     "min": 0,
+     "max": 120,
+     "start": 225,
+     "sweep": 270,
+     "width": 34,
+     "segments": 24,
+     "unlit_shade": 0.14,
+     "zone_fill": true,
+     "glow": 0.7,
+     "core": true,
+     "ticks": {
+      "major": 6,
+      "minor": 2
+     },
+     "number": {
+      "style": "seg7",
+      "height": 70,
+      "digits": 3,
+      "glow": 0.7,
+      "core": true,
+      "dy": 0
+     },
+     "label": {
+      "text": "OIL",
+      "dy": 80
+     },
+     "unit": {
+      "dy": -55
+     },
+     "alerts": {
+      "low_crit": 10,
+      "low_warn": 20,
+      "when_running": true,
+      "flash": false,
+      "takeover": false
+     },
+     "anim": {
+      "smooth": 0.5,
+      "sweep": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "oil_led",
+   "name": "Oil (LED digits)",
+   "gauges": [
+    {
+     "type": "digital",
+     "input": "oil_psi",
+     "x": 240,
+     "y": 235,
+     "colors": {
+      "text": "#8fd0ff"
+     },
+     "number": {
+      "style": "seg7",
+      "height": 130,
+      "digits": 3,
+      "slant": 8,
+      "ghost": 0.1,
+      "glow": 0.8,
+      "core": true
+     },
+     "label": {
+      "text": "OIL",
+      "font": 20,
+      "dy": 100
+     },
+     "unit": {
+      "show": true,
+      "dy": -100
+     },
+     "alerts": {
+      "low_crit": 10,
+      "low_warn": 20,
+      "when_running": true,
+      "flash": false,
+      "takeover": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "boost_arc",
+   "name": "Boost",
+   "gauges": [
+    {
+     "type": "arc",
+     "input": "boost_psi",
+     "min": -15,
+     "max": 30,
+     "origin": 0,
+     "segments": 0,
+     "width": 24,
+     "ticks": {
+      "step": 5,
+      "minor": 1
+     },
+     "label": {
+      "text": "BOOST"
+     },
+     "alerts": {
+      "high_warn": 18,
+      "high_crit": 22
+     },
+     "anim": {
+      "smooth": 0.3,
+      "peak": true,
+      "peak_s": 5
+     }
+    }
+   ]
+  },
+  {
+   "id": "afr_big",
+   "name": "AFR (big number)",
+   "gauges": [
+    {
+     "type": "digital",
+     "input": "afr",
+     "x": 240,
+     "y": 230,
+     "number": {
+      "font": 48
+     },
+     "label": {
+      "text": "AFR",
+      "font": 20,
+      "dy": 60
+     },
+     "unit": {
+      "show": false
+     },
+     "note": {
+      "font": 16,
+      "dx": 0,
+      "dy": 100,
+      "none": "no wideband",
+      "low_warn": "rich",
+      "high_warn": "lean",
+      "high_crit": "LEAN"
+     },
+     "alerts": {
+      "high_warn": 15.0,
+      "high_crit": 16.5,
+      "when_running": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "oil_boost_afr",
+   "name": "Oil + boost + AFR",
+   "gauges": [
+    {
+     "type": "digital",
+     "input": "oil_psi",
+     "x": 240,
+     "y": 140,
+     "number": {
+      "font": 48
+     },
+     "label": {
+      "text": "OIL",
+      "font": 16,
+      "dy": 44
+     },
+     "unit": {
+      "show": false
+     },
+     "alerts": {
+      "low_crit": 10,
+      "low_warn": 20,
+      "when_running": true,
+      "flash": false,
+      "takeover": false
+     }
+    },
+    {
+     "type": "bar",
+     "input": "boost_psi",
+     "min": -15,
+     "max": 30,
+     "origin": 0,
+     "x": 240,
+     "y": 270,
+     "w": 320,
+     "h": 28,
+     "segments": 20,
+     "number": {
+      "font": 20,
+      "dy": -32
+     },
+     "label": {
+      "text": "BOOST",
+      "font": 14,
+      "dy": 30
+     },
+     "alerts": {
+      "high_warn": 18,
+      "high_crit": 22
+     }
+    },
+    {
+     "type": "bar",
+     "input": "afr",
+     "min": 10,
+     "max": 20,
+     "x": 240,
+     "y": 350,
+     "w": 320,
+     "h": 28,
+     "number": {
+      "font": 20,
+      "dy": -32
+     },
+     "label": {
+      "text": "AFR",
+      "font": 14,
+      "dy": 30
+     }
+    },
+    {
+     "type": "light",
+     "input": "engine_running",
+     "x": 240,
+     "y": 420,
+     "size": 22,
+     "label": {
+      "text": "RUNNING",
+      "font": 14,
+      "dy": 26
+     },
+     "on_color": "ok"
+    }
+   ]
+  }
+ ]
+}

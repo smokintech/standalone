@@ -1,0 +1,80 @@
+{
+  "format": "370z-gauge-layout",
+  "version": 1,
+  "views": [
+    {
+      "id": "coolant_arc",
+      "name": "Coolant (arc)",
+      "gauges": [
+        { "type": "arc", "input": "coolant_c", "min": 40, "max": 140, "start": 225, "sweep": 270,
+          "segments": 20, "ticks": { "major": 5, "minor": 2 },
+          "alerts": { "high_warn": 105, "high_crit": 115, "flash": true, "takeover": true },
+          "anim": { "smooth": 0.5, "sweep": true } }
+      ]
+    },
+    {
+      "id": "temps_dual",
+      "name": "Coolant + oil temp",
+      "gauges": [
+        { "type": "arc", "input": "coolant_c", "min": 40, "max": 140, "start": 280, "sweep": 160,
+          "segments": 12, "ticks": { "major": 0 },
+          "number": { "font": 48, "dy": -80 }, "label": { "text": "COOLANT", "font": 16, "dy": -130 },
+          "unit": { "show": true, "font": 16, "dy": -40 },
+          "alerts": { "high_warn": 105, "high_crit": 115 } },
+        { "type": "arc", "input": "oil_temp_c", "min": 0, "max": 150, "start": 260, "sweep": -160,
+          "segments": 12, "ticks": { "major": 0 },
+          "number": { "font": 48, "dy": 80 }, "label": { "text": "OIL TEMP", "font": 16, "dy": 130 },
+          "unit": { "show": false },
+          "alerts": { "high_warn": 120, "high_crit": 135 } }
+      ]
+    },
+    {
+      "id": "oil_needle",
+      "name": "Oil (needle)",
+      "gauges": [
+        { "type": "needle", "input": "oil_psi", "min": 0, "max": 120, "start": 225, "sweep": 270,
+          "width": 14, "ticks": { "major": 6, "minor": 4 },
+          "number": { "font": 48, "dy": 95 }, "label": { "text": "OIL", "dy": 140 }, "unit": { "dy": 58 },
+          "alerts": { "low_crit": 15, "low_warn": 25, "when_running": true, "flash": true, "takeover": true },
+          "anim": { "smooth": 0.6, "sweep": true, "peak": true, "peak_s": 3 } }
+      ]
+    },
+    {
+      "id": "boost_arc",
+      "name": "Boost",
+      "gauges": [
+        { "type": "arc", "input": "boost_psi", "min": -15, "max": 30, "origin": 0, "segments": 0, "width": 24,
+          "ticks": { "major": 9, "minor": 1 }, "alerts": { "high_warn": 18, "high_crit": 22 },
+          "anim": { "smooth": 0.3, "peak": true, "peak_s": 5 } }
+      ]
+    },
+    {
+      "id": "driver",
+      "name": "Driver info",
+      "gauges": [
+        { "type": "digital", "input": "gear", "x": 240, "y": 150, "number": { "font": 48 },
+          "label": { "text": "GEAR", "font": 16, "dy": 44 }, "unit": { "show": false } },
+        { "type": "bar", "input": "throttle_pct", "x": 240, "y": 270, "w": 320, "h": 28, "segments": 20,
+          "number": { "font": 20, "dx": 0, "dy": -32 }, "label": { "text": "THROTTLE", "font": 14, "dy": 30 } },
+        { "type": "bar", "input": "inj_duty_pct", "x": 240, "y": 350, "w": 320, "h": 28,
+          "number": { "font": 20, "dy": -32 }, "label": { "text": "INJ DUTY", "font": 14, "dy": 30 },
+          "alerts": { "high_warn": 80, "high_crit": 90 } },
+        { "type": "light", "input": "handbrake", "x": 120, "y": 100, "size": 34, "label": { "text": "P", "font": 14, "dy": 32 } },
+        { "type": "light", "input": "vdc_off", "x": 360, "y": 100, "size": 34, "shape": "square",
+          "on_color": "warn", "label": { "text": "VDC OFF", "font": 14, "dy": 32 } },
+        { "type": "text", "x": 240, "y": 425, "text": "370Z", "font": 20, "color": "dim" }
+      ]
+    },
+    {
+      "id": "volts_bar",
+      "name": "Battery (vertical)",
+      "screens": [2],
+      "gauges": [
+        { "type": "bar", "input": "volts", "x": 240, "y": 250, "w": 70, "h": 300, "vertical": true, "segments": 12,
+          "number": { "font": 48, "dx": 0, "dy": -195 },
+          "label": { "text": "BATTERY", "font": 16, "dy": 170 },
+          "alerts": { "low_crit": 11.8, "low_warn": 12.2, "high_crit": 15.0 } }
+      ]
+    }
+  ]
+}
